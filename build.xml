@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="create_lib_jar" name="KerbalStuffAPI">
+	<!--this file was created by Eclipse Runnable JAR Export Wizard-->
+	<!--ANT 1.7 is required                                        -->
+
+	<property name="groovy.lib" value="${GROOVY_LIB}" />
+	<property name="project.version" value="0.1.0" />
+	<property name="project.name" value="KerbalStuffAPI" />
+
+	<target name="create_run_jar">
+		<jar destfile="${project.name}-${project.version}-runable.jar" filesetmanifest="mergewithoutmain">
+			<manifest>
+				<attribute name="Main-Class" value="com.kerbalstuff.api.KerbalStuffAPITest" />
+				<attribute name="Class-Path" value="." />
+			</manifest>
+			<fileset dir="bin" />
+
+			<zipfileset excludes="META-INF/*.SF" src="${groovy.lib}/groovy-all-current.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/groovy-wslite-1.1.0.jar" />
+			
+			
+		</jar>
+	</target>
+	
+	<target name="create_lib_jar_withgroovy">
+		<jar destfile="${project.name}-${project.version}.jar" filesetmanifest="mergewithoutmain">
+			<fileset dir="bin" />
+
+			<zipfileset excludes="META-INF/*.SF" src="${groovy.lib}/groovy-all-current.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/groovy-wslite-1.1.0.jar" />
+			
+			
+		</jar>
+	</target>
+	
+	<target name="create_lib_jar">
+		<jar destfile="${project.name}-${project.version}-nogroovy.jar" filesetmanifest="mergewithoutmain">
+			<fileset dir="bin" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/groovy-wslite-1.1.0.jar" />
+		</jar>
+	</target>
+
+</project>
