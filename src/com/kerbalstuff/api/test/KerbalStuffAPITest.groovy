@@ -1,20 +1,30 @@
 package com.kerbalstuff.api.test
 
-import com.kerbalstuff.api.KerbalStuffAPI;
-import com.kerbalstuff.api.Mod;
-import com.kerbalstuff.api.ModVersion;
+import com.kerbalstuff.api.KerbalStuffAPI
+import com.kerbalstuff.api.User
 
 class KerbalStuffAPITest {
 
 	
 	static main(args) {
 		KerbalStuffAPITestGui gui = new KerbalStuffAPITestGui();
-		
 		/*
+		
 		String search = "Resource Overview";
 		int id = 8;
 		
 		KerbalStuffAPI api = new KerbalStuffAPI();
+		
+		List<User> userList = api.searchUser("");
+		userList.each { u ->
+			println(u);
+			// println(u.getForumUsername());
+		}
+		
+		//api.authenticate("SMILIE", "pw");
+		
+		
+		
 		
 		println("searching for ${search}");
 		List<Mod> modList = api.search(search);

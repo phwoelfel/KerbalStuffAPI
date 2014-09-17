@@ -1,7 +1,6 @@
 package com.kerbalstuff.api.test
 
 import java.awt.BorderLayout
-import java.awt.Dimension
 import java.awt.GridBagConstraints
 import java.awt.GridBagLayout
 import java.awt.Insets
@@ -23,15 +22,17 @@ import javax.swing.event.ListSelectionListener
 import com.kerbalstuff.api.KerbalStuffAPI
 import com.kerbalstuff.api.Mod
 import com.kerbalstuff.api.ModVersion
+import com.kerbalstuff.api.User
 
 class KerbalStuffAPITestGui extends JFrame implements ActionListener, ListSelectionListener{
 
 	protected KerbalStuffAPI api;
 	
 	protected JTextField searchField;
-	protected JButton searchButton;
+	protected JButton searchModButton;
+	protected JButton searchUserButton;
 	
-	protected JList<Mod> resultList;
+	protected JList resultList;
 	protected JPanel infoPanel;
 	
 	protected JTextField nameField;
@@ -53,17 +54,21 @@ class KerbalStuffAPITestGui extends JFrame implements ActionListener, ListSelect
 		
 		
 		searchField = new JTextField(10);
-		searchButton = new JButton("search");
-		searchButton.addActionListener(this);
+		searchModButton = new JButton("search mod");
+		searchModButton.addActionListener(this);
+		
+		searchUserButton = new JButton("search user");
+		searchUserButton.addActionListener(this);
 		
 		JPanel topPanel = new JPanel();
 		topPanel.add(searchField);
-		topPanel.add(searchButton);
+		topPanel.add(searchModButton);
+		topPanel.add(searchUserButton);
 		
 		add(topPanel, BorderLayout.NORTH);
 		
 		JSplitPane centerPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-		resultList = new JList<Mod>();
+		resultList = new JList();
 		//resultList.setPreferredSize(new Dimension(200, 500));
 		resultList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		resultList.addListSelectionListener(this);
@@ -82,12 +87,23 @@ class KerbalStuffAPITestGui extends JFrame implements ActionListener, ListSelect
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Object source = e.getSource();
-		if(source == searchButton){
+		if(source == searchModButton){
 			String txt = searchField.getText();
 			if(txt){
-				List<Mod> mods = api.search(txt);
+				List<Mod> mods = api.searchMod(txt);
 				//DefaultListModel<Mod> lm = new DefaultListModel<Mod>();
 				resultList.setListData(mods.toArray());
+				revalidate();
+				repaint();
+			}
+		}
+		
+		if(source == searchUserButton){
+			String txt = searchField.getText();
+			if(txt){
+				List<User> user = api.searchUser(txt);
+				//DefaultListModel<Mod> lm = new DefaultListModel<Mod>();
+				resultList.setListData(user.toArray());
 				revalidate();
 				repaint();
 			}
@@ -203,8 +219,10 @@ class KerbalStuffAPITestGui extends JFrame implements ActionListener, ListSelect
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
 		if(!e.getValueIsAdjusting()){
-			Mod selMod = resultList.getSelectedValue();
-			showMod(selMod);
+			def sel = resultList.getSelectedValue();
+			if(sel instanceof Mod){
+				showMod((Mod)sel);
+			}
 		}
 		
 	}
