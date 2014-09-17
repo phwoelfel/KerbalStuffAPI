@@ -17,6 +17,40 @@ class ModVersion {
 	}
 	
 	public String toString(){
-		return "Version: ${friendlyVersion} (ID: ${id}) for KSP ${kspVersion}";
+		return "Version: ${friendlyVersion} for KSP ${kspVersion} (ID: ${id})";
 	}
+
+	public String getFriendlyVersion() {
+		return friendlyVersion;
+	}
+
+	public void setFriendlyVersion(String friendlyVersion) {
+		this.friendlyVersion = friendlyVersion;
+	}
+
+	public String getKspVersion() {
+		return kspVersion;
+	}
+
+	public void setKspVersion(String kspVersion) {
+		this.kspVersion = kspVersion;
+	}
+
+	public String getChangelog() {
+		return changelog;
+	}
+
+	public void setChangelog(String changelog) {
+		this.changelog = changelog;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public String getDownloadPath() {
+		return downloadPath;
+	}
+	
+	
 }
