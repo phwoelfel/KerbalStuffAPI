@@ -1,10 +1,17 @@
-package com.kerbalstuff.api
+package com.kerbalstuff.api.test
+
+import com.kerbalstuff.api.KerbalStuffAPI;
+import com.kerbalstuff.api.Mod;
+import com.kerbalstuff.api.ModVersion;
 
 class KerbalStuffAPITest {
 
 	
 	static main(args) {
-		String search = "FAR";
+		KerbalStuffAPITestGui gui = new KerbalStuffAPITestGui();
+		
+		/*
+		String search = "Resource Overview";
 		int id = 8;
 		
 		KerbalStuffAPI api = new KerbalStuffAPI();
@@ -28,11 +35,14 @@ class KerbalStuffAPITest {
 			println(mv)
 		}
 		
+		
 		println("\n------------------------------------\n");
 		println("getting latest version for id: ${id}")
 		ModVersion irLatest = api.getLatestVersion(id);
 		println(irLatest);
 		println(irLatest.changelog);
+		*/
+		
 	}
 
 }
