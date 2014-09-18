@@ -25,6 +25,16 @@ class User {
 		}
 	}
 	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj && obj instanceof User){
+			if( ((User)obj)?.getUsername() ==  username){
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	public String toString(){
 		return username;
 	}

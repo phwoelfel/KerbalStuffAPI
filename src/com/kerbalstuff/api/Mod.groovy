@@ -9,7 +9,7 @@ class Mod {
 	protected int followers;
 	protected String shortDescription;
 	
-	protected int defaultVersion;
+	protected int defaultVersionID;
 	
 	protected List<ModVersion> modVersions;
 	
@@ -20,7 +20,7 @@ class Mod {
 		downloads = data['downloads'];
 		followers = data['followers'];
 		shortDescription = data['short_description'];
-		defaultVersion = data['default_version_id'];
+		defaultVersionID = data['default_version_id'];
 		modVersions = new ArrayList<ModVersion>();
 		
 		data['versions'].each{ mv ->
@@ -34,6 +34,16 @@ class Mod {
 	
 	public String toString(){
 		return "${name} by ${author}";
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj && obj instanceof Mod){
+			if( ((Mod)obj)?.getId() ==  id){
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public String getName() {
@@ -52,12 +62,16 @@ class Mod {
 		this.shortDescription = shortDescription;
 	}
 
-	public int getDefaultVersion() {
-		return defaultVersion;
+	public int getDefaultVersion(){
+		return modVersions.find{it.id == defaultVersionID};
+	}
+	
+	public int getDefaultVersionID() {
+		return defaultVersionID;
 	}
 
-	public void setDefaultVersion(int defaultVersion) {
-		this.defaultVersion = defaultVersion;
+	public void setDefaultVersionID(int defaultVersion) {
+		this.defaultVersionID = defaultVersion;
 	}
 
 	public int getId() {

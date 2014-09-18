@@ -19,6 +19,16 @@ class ModVersion {
 	public String toString(){
 		return "Version: ${friendlyVersion} for KSP ${kspVersion} (ID: ${id})";
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj && obj instanceof ModVersion){
+			if( ((ModVersion)obj)?.getId() ==  id){
+				return true;
+			}
+		}
+		return false;
+	}
 
 	public String getFriendlyVersion() {
 		return friendlyVersion;

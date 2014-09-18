@@ -210,7 +210,7 @@ class KerbalStuffAPITestGui extends JFrame implements ActionListener, ListSelect
 			downloadsField.setText(""+m.getDownloads());
 			followersField.setText(""+m.getFollowers());
 			shortDescriptionField.setText(""+m.getShortDescription());
-			defaultVersionField.setText(""+m.getDefaultVersion());
+			defaultVersionField.setText(""+m.getDefaultVersionID());
 			
 			modVersionList.setListData(m.getModVersions().toArray());
 		}
