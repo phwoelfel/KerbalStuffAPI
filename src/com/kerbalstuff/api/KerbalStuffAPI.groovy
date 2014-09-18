@@ -1,5 +1,6 @@
 package com.kerbalstuff.api
 
+import groovy.json.JsonException
 import groovy.json.JsonSlurper
 import wslite.rest.RESTClient
 import wslite.rest.RESTClientException
@@ -36,7 +37,7 @@ class KerbalStuffAPI {
 		Response resp = post("/login", [username:user, password:password]);
 		def setCookie = resp.headers.find{k,v -> k=="Set-Cookie"};
 		//println(setCookie.getKey() + ": " +setCookie.getValue());
-		authCookie = setCookie?.getValue()?.split(";")?.get(0)?.split("=")?.get(1);
+		authCookie = setCookie?.getValue()?.split(";")[0]?.split("=")[1];
 		if(authCookie){
 			return true;
 		}
@@ -129,20 +130,34 @@ class KerbalStuffAPI {
 	 * @return The URL to the newly created mod.
 	 */
 	public String createMod(String name, String shortDescription, String version, String kspVersion, String license, File zipFile){
-		// TODO: check auth
-		def data = [:];
-		data['name'] = name;
-		data['short-description'] = shortDescription;
-		data['version'] = version;
-		data['ksp-version'] = kspVersion;
-		data['license'] = license;
-		data['zipball'] = zipFile;
-		Response response = post("/mod/create", data)
-		return response.json.url;
+		if(authCookie){
+			def data = [:];
+			data['name'] = name;
+			data['short-description'] = shortDescription;
+			data['version'] = version;
+			data['ksp-version'] = kspVersion;
+			data['license'] = license;
+			data['zipball'] = zipFile;
+			Response response = post("/mod/create", data)
+			return response.json.url;
+		}
+		throw new KerbalStuffAPIException("Not authenticated!", null, null);
 	}
 	
 
-	
+	public String addModVersion(int modID, String changelog, String version, String kspVersion, boolean notifyFollowers, File zipFile){
+		if(authCookie){
+			def data = [:];
+			data['changelog'] = changelog;
+			data['version'] = version;
+			data['ksp-version'] = kspVersion;
+			data['notify-followers'] = notifyFollowers;
+			data['zipball'] = zipFile;
+			Response response = post("/mod/${modID}/update", data)
+			return response.json.url;
+		}
+		throw new KerbalStuffAPIException("Not authenticated!", null, null);
+	}
 	
 	
 	/**
@@ -154,9 +169,9 @@ class KerbalStuffAPI {
 	 */
 	protected Response post(def path, def data) throws KerbalStuffAPIException{
 		Response response=null;
-		def headers = [];
+		def headers = [:];
 		if(authCookie){
-			headers['Cookie'] = 'session=${authCookie}';
+			headers['Cookie'] = "session=${authCookie}";
 		}
 		try{
 			response = client.post(path: path, headers:headers){
@@ -172,9 +187,14 @@ class KerbalStuffAPI {
 			// catch http 400 etc errors
 			
 			String resp = new String(ex.response.data);
-			def json = new JsonSlurper().parseText(resp);
-			if(json?.error){
-				throw new KerbalStuffAPIException(json?.reason, ex.response, ex.request)
+			try{
+				def json = new JsonSlurper().parseText(resp);
+				if(json?.error){
+					throw new KerbalStuffAPIException(json?.reason, ex.response, ex.request)
+				}
+			}
+			catch(JsonException exe){
+				
 			}
 			throw new KerbalStuffAPIException(ex.response, ex.request)
 		}
@@ -209,6 +229,12 @@ class KerbalStuffAPI {
 	}
 	
 	
+	/**
+	 * Checks if a response is valid. (Checks if json contains an error element)
+	 * @param response The response to check.
+	 * @return If this response contains an error element or not.
+	 * @throws KerbalStuffAPIException
+	 */
 	protected boolean checkResponse(Response response) throws KerbalStuffAPIException{
 		if(response?.json?.error == true || (response?.json?.error instanceof List && response?.json?.error?.contains(true))){ //if we search and get multiple results, we get a list of "errors" (nulls)
 			throw new KerbalStuffAPIException(response?.json?.reason, response.response, response.request);
