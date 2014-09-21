@@ -1,46 +1,77 @@
 package com.kerbalstuff.api.test
 
-import wslite.rest.Response
-
 import com.kerbalstuff.api.KerbalStuffAPI
 import com.kerbalstuff.api.KerbalStuffAPIException
+import com.kerbalstuff.api.Mod
+import com.kerbalstuff.api.ModVersion
+import com.kerbalstuff.api.User
 
 class KerbalStuffAPITest {
 
 	
 	static main(args) {
 		
-		// update README.md --> page for search, notify-followers for update = true (not yes)
-		// update api for notify followers to allow yes
-		
-		//KerbalStuffAPITestGui gui = new KerbalStuffAPITestGui();
-		
-		
-		String search = "Resource Overview";
-		int id = 8;
+		String modSearch = "Resource Overview";
+		String userSearch = "sir";
+		int modID = 8;
+		String userName = "SMILIE";
 		
 		KerbalStuffAPI api = new KerbalStuffAPI();
-		/*
-		List<User> userList = api.searchUser("");
-		userList.each { u ->
-			println(u);
-			// println(u.getForumUsername());
-		}
-		*/
-		
-		if(args.size()>1){
-			println("authenticating ${args[0]}")
-			def authret = api.authenticate(args[0], args[1]);
-			if(authret){
-				println("authenticated sucessfull!")
-				println("auth cookie: ${api.authCookie}")
-			}
-		}
 		
 		try{
-			println("trying to create mod")
-			Response resp = api.createMod("KS API Test mod", "Just a mod to test the KerbalStuff API", "1.0", "0.24.2", "MIT", new File("test.zip"));
-			println(new String(resp.getData()));
+			// authentication via arguments
+			if(args.size()>1){
+				println(("#"*10)+" authenticating ${args[0]}")
+				def authret = api.authenticate(args[0], args[1]);
+				// def authret = api.login(args[0], args[1]);
+				if(authret){
+					println(("#"*10)+"authenticated ${args[0]} sucessfull!")
+				}
+			}
+			
+			
+			// search for user
+			println(("#"*10)+" searching for user ${userSearch}")
+			List<User> userList = api.searchUser(userSearch);
+			userList.each { u ->
+				println(u.getInfo());
+			}
+			
+			
+			// get User
+			println(("#"*10)+" getting user ${userName}");
+			User u = api.getUser(userName);
+			println(u.getInfo());
+			
+			
+			// search for mod
+			println(("#"*10)+" searching for mod ${modSearch}");
+			List<Mod> modList = api.searchMod(modSearch);
+			modList.each{ m ->
+				println(m.getInfo());
+			}
+			
+			// get mod
+			println(("#"*10)+" getting mod with id: ${modID}");
+			Mod m = api.getMod(modID);
+			println(m.getInfo());
+			
+			// get latest version
+			println(("#"*10)+" getting latest version for mod ${modID}");
+			ModVersion mv = api.getLatestModVersion(modID);
+			println(mv.getInfo());
+			
+			
+			/*
+			// create mod
+			println(("#"*10)+" trying to create mod");
+			String resp = api.createMod("KS API Test Mod", "Just a mod to test the KerbalStuff API", "1.0", "0.24.2", "MIT", new File("test.zip"));
+			println(("#"*10)+" created new mod ${resp}");
+			def newModID =  Integer.parseInt(resp.split("/")[2]); // response is url in the format /mod/<id>/<name> --> splitting the id out
+			println(("#"*10)+" trying to update mod: ${newModID}");
+			def updateResp = api.addModVersion(newModID, "Changing stuff!", "1.1", "0.24.2", false, new File("test_update.zip"))
+			println(("#"*10)+" update response: ${updateResp}")
+			*/
 		}
 		catch(KerbalStuffAPIException ex){
 			println("Error!!!")
@@ -56,36 +87,6 @@ class KerbalStuffAPITest {
 				println("Data: ${new String(ex.getResponse().data)}")
 			}
 		}
-		
-		
-		/*
-		println("searching for ${search}");
-		List<Mod> modList = api.search(search);
-		modList.each{ m ->
-			println(m);
-			println("Versions:")
-			m.modVersions.each{ mv ->
-				println(mv)
-			}
-		}
-		
-		println("\n------------------------------------\n");
-		println("getting mod for id: ${id}")
-		Mod ir = api.getMod(id);
-		println(ir);
-		println("Versions:")
-		ir.modVersions.each{ mv ->
-			println(mv)
-		}
-		
-		
-		println("\n------------------------------------\n");
-		println("getting latest version for id: ${id}")
-		ModVersion irLatest = api.getLatestVersion(id);
-		println(irLatest);
-		println(irLatest.changelog);
-		*/
-		
 	}
 
 }
