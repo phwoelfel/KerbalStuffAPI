@@ -16,6 +16,10 @@ class ModVersion {
 		changelog = data['changelog'];
 	}
 	
+	public String getInfo(){
+		return "Version: ${friendlyVersion} for KSP ${kspVersion} (ID: ${id})\n\t${downloadPath}\n\t${changelog}"
+	}
+	
 	public String toString(){
 		return "Version: ${friendlyVersion} for KSP ${kspVersion} (ID: ${id})";
 	}

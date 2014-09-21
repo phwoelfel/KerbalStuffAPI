@@ -35,6 +35,16 @@ class User {
 		return false;
 	}
 	
+	public String getInfo(){
+		StringBuilder sb = new StringBuilder();
+		sb.append("User: ${username}\n\t${description}\n\tReddit: ${redditUsername}\n\tIRC: ${ircNick}\n\tForum: ${forumUsername}\n\tTwitter: ${twitterUsername}\n");
+		sb.append("Mods: \n");
+		mods.each{ mod ->
+			sb.append("\t${mod}\n");
+		}
+		return sb.toString();
+	}
+	
 	public String toString(){
 		return username;
 	}

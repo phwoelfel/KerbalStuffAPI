@@ -4,7 +4,7 @@ import wslite.http.HTTPRequest;
 import wslite.http.HTTPResponse;
 import wslite.rest.Response
 
-class KerbalStuffAPIException extends Throwable{
+public class KerbalStuffAPIException extends Throwable{
 
 	String reason;
 	HTTPResponse response;

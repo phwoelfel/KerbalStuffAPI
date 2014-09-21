@@ -29,7 +29,13 @@ class Mod {
 	}
 	
 	public String getInfo(){
-		return "${name} by ${author} (ID: ${id})\n\tDownloads: ${downloads}\n\tFollowers: ${followers}\n\t${shortDescription}";
+		StringBuilder sb = new StringBuilder();
+		sb.append("${name} by ${author} (ID: ${id})\n\tDownloads: ${downloads}\n\tFollowers: ${followers}\n\t${shortDescription}\n");
+		sb.append("Versions:\n");
+		modVersions.each{ mv ->
+			sb.append("\t${mv}\n");
+		}
+		return sb.toString();
 	}
 	
 	public String toString(){
