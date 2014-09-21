@@ -139,7 +139,7 @@ class KerbalStuffAPI {
 			data['license'] = license;
 			data['zipball'] = zipFile;
 			Response response = post("/mod/create", data)
-			return response.json.url;
+			return response?.json?.url;
 		}
 		throw new KerbalStuffAPIException("Not authenticated!", null, null);
 	}
@@ -159,6 +159,7 @@ class KerbalStuffAPI {
 		throw new KerbalStuffAPIException("Not authenticated!", null, null);
 	}
 	
+
 	
 	/**
 	 * Sends a POST request to the given relative API path.
@@ -176,7 +177,12 @@ class KerbalStuffAPI {
 		try{
 			response = client.post(path: path, headers:headers){
 				data.each { k, v ->
-					multipart k, v.bytes
+					if(v instanceof File){
+						multipart k, v
+					}
+					else{
+						multipart k, v.bytes
+					}
 				}
 			}
 			if(checkResponse(response)){
