@@ -8,11 +8,11 @@ import wslite.rest.Response
 
 /**
  * An API implementation of the KerbalStuff (http://kerbalstuff.com) Web API for Groovy.
- * 
- * <b>Method Exceptions</b>
+ * <br />
+ * <h2>Exceptions</h2>
  * If an error occurs, a KerbalStuffAPIException will be thrown. KerbalStuffAPIException.getReason() is not null if it is an error returned by the API, else it is possibly a HTTP error.
  */
-class KerbalStuffAPI {
+public class KerbalStuffAPI {
 
 	protected RESTClient client
 	protected def authCookie;
@@ -22,6 +22,9 @@ class KerbalStuffAPI {
 		//client.httpClient.sslTrustAllCerts = true
 	}
 	
+	/**
+	 * See: {@link #authenticate(String, String) authenticate}
+	 */
 	public boolean login(String user, String password) throws KerbalStuffAPIException{
 		return authenticate(user, password);
 	}
@@ -42,6 +45,22 @@ class KerbalStuffAPI {
 			return true;
 		}
 		return false;
+	}
+	
+	/**
+	 * Gets the authentication cookie.
+	 * @return If already authenticated or manually set, the authentication cookie, else null.
+	 */
+	public def getAuthCookie(){
+		return authCookie;
+	}
+	
+	/**
+	 * Set the value of the cookie used to authenticate a user.
+	 * @param cookie The value of the authentication cookie.
+	 */
+	public void setAuthCookie(def cookie){
+		authCookie = cookie;
 	}
 	
 	/**
@@ -128,8 +147,9 @@ class KerbalStuffAPI {
 	 * @param license The license of the mod.
 	 * @param zipFile A File object pointing to the zip file containing the mod.
 	 * @return The URL to the newly created mod.
+	 * @throws KerbalStuffAPIException
 	 */
-	public String createMod(String name, String shortDescription, String version, String kspVersion, String license, File zipFile){
+	public String createMod(String name, String shortDescription, String version, String kspVersion, String license, File zipFile) throws KerbalStuffAPIException{
 		if(authCookie){
 			def data = [:];
 			data['name'] = name;
@@ -144,8 +164,26 @@ class KerbalStuffAPI {
 		throw new KerbalStuffAPIException("Not authenticated!", null, null);
 	}
 	
+	/**
+	 * See: {@link #addModVersion(int, String, String, String, boolean, File) addModVersion}
+	 */
+	public String updateMod(int modID, String changelog, String version, String kspVersion, boolean notifyFollowers, File zipFile) throws KerbalStuffAPIException{
+		return addModVersion(modID, changelog, version, kspVersion, notifyFollowers, zipFile);
+	}
 
-	public String addModVersion(int modID, String changelog, String version, String kspVersion, boolean notifyFollowers, File zipFile){
+	/**
+	 * Add a new version to an already existing mod.
+	 * Requires authentication!
+	 * @param modID The ID of the mod to update.
+	 * @param changelog A String containing the changelog for this version.
+	 * @param version The new version number.
+	 * @param kspVersion The KSP version this update is compatible with. 
+	 * @param notifyFollowers Should the followers of this mod get an E-Mail or not.
+	 * @param zipFile The actual ZIP file to upload.
+	 * @return The URL to the mod that was updated.
+	 * @throws KerbalStuffAPIException
+	 */
+	public String addModVersion(int modID, String changelog, String version, String kspVersion, boolean notifyFollowers, File zipFile) throws KerbalStuffAPIException{
 		if(authCookie){
 			def data = [:];
 			data['changelog'] = changelog;
@@ -154,7 +192,7 @@ class KerbalStuffAPI {
 			data['notify-followers'] = notifyFollowers;
 			data['zipball'] = zipFile;
 			Response response = post("/mod/${modID}/update", data)
-			return response.json.url;
+			return response?.json?.url;
 		}
 		throw new KerbalStuffAPIException("Not authenticated!", null, null);
 	}
@@ -175,13 +213,14 @@ class KerbalStuffAPI {
 			headers['Cookie'] = "session=${authCookie}";
 		}
 		try{
+			
 			response = client.post(path: path, headers:headers){
 				data.each { k, v ->
 					if(v instanceof File){
 						multipart k, v
 					}
 					else{
-						multipart k, v.bytes
+						multipart k, v.toString().bytes
 					}
 				}
 			}
