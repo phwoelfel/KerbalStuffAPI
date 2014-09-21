@@ -70,15 +70,12 @@ public class KerbalStuffAPI {
 	 * @return A List of User Objects.
 	 * @throws KerbalStuffAPIException
 	 */
-	public List<User> searchUser(String search, int page=1) throws KerbalStuffAPIException{
-		Response response = get(path:'/search/user', query:[query:search, page:page]);
+	public List<User> searchUser(String search, int page=0) throws KerbalStuffAPIException{
+		Response response = get(path:"/search/user", query:[query:search, page:page]);
 		List<Mod> userList = new ArrayList<Mod>();
-		
 		response.json.each { u ->
 			userList.add(new User(u));
 		}
-	
-		
 		return userList;
 	}
 	
@@ -90,7 +87,7 @@ public class KerbalStuffAPI {
 	 * @throws KerbalStuffAPIException
 	 */
 	public User getUser(String username) throws KerbalStuffAPIException{
-		Response response = get(path:'/user/${username}');
+		Response response = get(path:"/user/${username}");
 		return new User(response.json);
 	}
 	
@@ -103,7 +100,7 @@ public class KerbalStuffAPI {
 	 * @throws KerbalStuffAPIException
 	 */
 	public List<Mod> searchMod(String search, int page=1) throws KerbalStuffAPIException{
-		Response response = get(path:'/search/mod', query:[query:search, page:page]);
+		Response response = get(path:"/search/mod", query:[query:search, page:page]);
 		List<Mod> modList = new ArrayList<Mod>();
 		
 		response.json.each { m ->
@@ -264,9 +261,14 @@ public class KerbalStuffAPI {
 			// catch http 400 etc errors
 			
 			String resp = new String(ex.response.data);
-			def json = new JsonSlurper().parseText(resp);
-			if(json?.error){
-				throw new KerbalStuffAPIException(json?.reason, ex.response, ex.request)	
+			try{
+				def json = new JsonSlurper().parseText(resp);
+				if(json?.error){
+					throw new KerbalStuffAPIException(json?.reason, ex.response, ex.request)	
+				}
+			}
+			catch(Exception exc){
+				// can't parse as json --> not a direct api error
 			}
 			throw new KerbalStuffAPIException(ex.response, ex.request)
 		}
