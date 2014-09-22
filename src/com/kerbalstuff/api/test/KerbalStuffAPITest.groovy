@@ -8,16 +8,26 @@ import com.kerbalstuff.api.User
 
 class KerbalStuffAPITest {
 
+	KerbalStuffAPI api;
+	
+	String modSearch = "Resource Overview";
+	String userSearch = "sir";
+	int modID = 8;
+	String userName = "SMILIE";
+	
+	public KerbalStuffAPITest(){
+		api = new KerbalStuffAPI();
+	}
 	
 	static main(args) {
+		//KerbalStuffAPITest test = new KerbalStuffAPITest();
+		//test.testValid();
 		
-		String modSearch = "Resource Overview";
-		String userSearch = "sir";
-		int modID = 8;
-		String userName = "SMILIE";
-		
-		KerbalStuffAPI api = new KerbalStuffAPI();
-		
+		KerbalStuffAPITestTableGui tableGui = new KerbalStuffAPITestTableGui();
+	}
+	
+	
+	public void testValid(){
 		try{
 			// authentication via arguments
 			if(args.size()>1){
@@ -62,7 +72,7 @@ class KerbalStuffAPITest {
 			println(mv.getInfo());
 			
 			
-			/*
+			
 			// create mod
 			println(("#"*10)+" trying to create mod");
 			String resp = api.createMod("KS API Test Mod", "Just a mod to test the KerbalStuff API", "1.0", "0.24.2", "MIT", new File("test.zip"));
@@ -71,7 +81,7 @@ class KerbalStuffAPITest {
 			println(("#"*10)+" trying to update mod: ${newModID}");
 			def updateResp = api.addModVersion(newModID, "Changing stuff!", "1.1", "0.24.2", false, new File("test_update.zip"))
 			println(("#"*10)+" update response: ${updateResp}")
-			*/
+			
 		}
 		catch(KerbalStuffAPIException ex){
 			println("Error!!!")
