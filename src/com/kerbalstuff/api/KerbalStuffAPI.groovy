@@ -136,6 +136,49 @@ public class KerbalStuffAPI {
 		return new ModVersion(response.json);
 	}
 	
+	
+	/**
+	 * Get the newest Mods.
+	 * @return A List of Mods.
+	 */
+	public List<Mod> getNewMods(){
+		Response resp = get(path:"/browse/new");
+		ArrayList<Mod> modList = new ArrayList<Mod>();
+		resp.json.each{ md ->
+			modList.add(new Mod(md));
+		}
+		
+		return modList;
+	}
+	
+	/**
+	 * Get the top Mods.
+	 * @return A List of Mods.
+	 */
+	public List<Mod> getTopMods(){
+		Response resp = get(path:"/browse/top");
+		ArrayList<Mod> modList = new ArrayList<Mod>();
+		resp.json.each{ md ->
+			modList.add(new Mod(md));
+		}
+		
+		return modList;
+	}
+	
+	/**
+	 * Get the featured Mods.
+	 * @return A List of Mods.
+	 */
+	public List<Mod> getFeaturedMods(){
+		Response resp = get(path:"/browse/featured");
+		ArrayList<Mod> modList = new ArrayList<Mod>();
+		resp.json.each{ md ->
+			modList.add(new Mod(md));
+		}
+		
+		return modList;
+	}
+	
 	/**
 	 * Creates a new mod with the given parameters.
 	 * Requires authentication!
