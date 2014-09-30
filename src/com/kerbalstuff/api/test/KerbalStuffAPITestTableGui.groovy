@@ -112,7 +112,7 @@ class KerbalStuffAPITestTableGui extends JFrame implements ActionListener{
 			}
 		}
 		catch(KerbalStuffAPIException apiex){
-			JOptionPane.showMessageDialog(this, "An API Error occured! Please check the log!", "Error!", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(this, "An API Error occured! Please check the log!${apiex.getReason()?:'\n'}", "Error!", JOptionPane.ERROR_MESSAGE);
 			println("Error!!!")
 			if(apiex.getReason()){
 				println("Reason: ${apiex.getReason()}")

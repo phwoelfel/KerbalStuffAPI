@@ -20,15 +20,38 @@ class KerbalStuffAPITest {
 	}
 	
 	static main(args) {
-		//KerbalStuffAPITest test = new KerbalStuffAPITest();
-		//test.testValid();
+		KerbalStuffAPITest test = new KerbalStuffAPITest();
+		test.testValid();
 		
-		KerbalStuffAPITestTableGui tableGui = new KerbalStuffAPITestTableGui();
+		//KerbalStuffAPITestTableGui tableGui = new KerbalStuffAPITestTableGui();
 	}
 	
 	
 	public void testValid(){
 		try{
+			
+			// get new mod list
+			println(("#"*10)+" getting new mods");
+			List<Mod> newModList = api.getNewMods();
+			newModList.each{ m ->
+				println(m.getInfo());
+			}
+			
+			// get top mod list
+			println(("#"*10)+" getting top mods");
+			List<Mod> topModList = api.getTopMods();
+			topModList.each{ m ->
+				println(m.getInfo());
+			}
+			
+			// get featured mod list
+			println(("#"*10)+" getting featured mods");
+			List<Mod> featuredModList = api.getFeaturedMods();
+			featuredModList.each{ m ->
+				println(m.getInfo());
+			}
+			
+			/*
 			// authentication via arguments
 			if(args.size()>1){
 				println(("#"*10)+" authenticating ${args[0]}")
@@ -75,12 +98,13 @@ class KerbalStuffAPITest {
 			
 			// create mod
 			println(("#"*10)+" trying to create mod");
-			String resp = api.createMod("KS API Test Mod", "Just a mod to test the KerbalStuff API", "1.0", "0.24.2", "MIT", new File("test.zip"));
+			int newModID = api.createMod("KS API Test Mod", "Just a mod to test the KerbalStuff API", "1.0", "0.24.2", "MIT", new File("test.zip"));
 			println(("#"*10)+" created new mod ${resp}");
-			def newModID =  Integer.parseInt(resp.split("/")[2]); // response is url in the format /mod/<id>/<name> --> splitting the id out
+			// def newModID =  Integer.parseInt(resp.split("/")[2]); // response is url in the format /mod/<id>/<name> --> splitting the id out
 			println(("#"*10)+" trying to update mod: ${newModID}");
 			def updateResp = api.addModVersion(newModID, "Changing stuff!", "1.1", "0.24.2", false, new File("test_update.zip"))
 			println(("#"*10)+" update response: ${updateResp}")
+			*/
 			
 		}
 		catch(KerbalStuffAPIException ex){
