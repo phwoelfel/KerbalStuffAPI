@@ -14,11 +14,13 @@ import wslite.rest.Response
  */
 public class KerbalStuffAPI {
 
+	protected static final String KS_API_URL="https://kerbalstuff.com/api";
+	
 	protected RESTClient client
 	protected def authCookie;
 	
 	public KerbalStuffAPI(){
-		client = new RESTClient("https://kerbalstuff.com/api")
+		client = new RESTClient(KS_API_URL)
 		//client.httpClient.sslTrustAllCerts = true
 	}
 	
@@ -143,10 +145,10 @@ public class KerbalStuffAPI {
 	 * @param kspVersion The KSP version for which this mod is made.
 	 * @param license The license of the mod.
 	 * @param zipFile A File object pointing to the zip file containing the mod.
-	 * @return The URL to the newly created mod.
+	 * @return The ID of the newly created mod.
 	 * @throws KerbalStuffAPIException
 	 */
-	public String createMod(String name, String shortDescription, String version, String kspVersion, String license, File zipFile) throws KerbalStuffAPIException{
+	public int createMod(String name, String shortDescription, String version, String kspVersion, String license, File zipFile) throws KerbalStuffAPIException{
 		if(authCookie){
 			def data = [:];
 			data['name'] = name;
@@ -156,7 +158,7 @@ public class KerbalStuffAPI {
 			data['license'] = license;
 			data['zipball'] = zipFile;
 			Response response = post("/mod/create", data)
-			return response?.json?.url;
+			return Integer.parseInt(response?.json?.id);
 		}
 		throw new KerbalStuffAPIException("Not authenticated!", null, null);
 	}
@@ -164,7 +166,7 @@ public class KerbalStuffAPI {
 	/**
 	 * See: {@link #addModVersion(int, String, String, String, boolean, File) addModVersion}
 	 */
-	public String updateMod(int modID, String changelog, String version, String kspVersion, boolean notifyFollowers, File zipFile) throws KerbalStuffAPIException{
+	public int updateMod(int modID, String changelog, String version, String kspVersion, boolean notifyFollowers, File zipFile) throws KerbalStuffAPIException{
 		return addModVersion(modID, changelog, version, kspVersion, notifyFollowers, zipFile);
 	}
 
@@ -177,10 +179,10 @@ public class KerbalStuffAPI {
 	 * @param kspVersion The KSP version this update is compatible with. 
 	 * @param notifyFollowers Should the followers of this mod get an E-Mail or not.
 	 * @param zipFile The actual ZIP file to upload.
-	 * @return The URL to the mod that was updated.
+	 * @return The ID of the mod that was updated.
 	 * @throws KerbalStuffAPIException
 	 */
-	public String addModVersion(int modID, String changelog, String version, String kspVersion, boolean notifyFollowers, File zipFile) throws KerbalStuffAPIException{
+	public int addModVersion(int modID, String changelog, String version, String kspVersion, boolean notifyFollowers, File zipFile) throws KerbalStuffAPIException{
 		if(authCookie){
 			def data = [:];
 			data['changelog'] = changelog;
@@ -189,7 +191,7 @@ public class KerbalStuffAPI {
 			data['notify-followers'] = notifyFollowers;
 			data['zipball'] = zipFile;
 			Response response = post("/mod/${modID}/update", data)
-			return response?.json?.url;
+			return Integer.parseInt(response?.json?.id);
 		}
 		throw new KerbalStuffAPIException("Not authenticated!", null, null);
 	}
