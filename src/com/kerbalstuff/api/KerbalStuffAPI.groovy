@@ -126,6 +126,18 @@ public class KerbalStuffAPI {
 	}
 	
 	/**
+	 * Gets the ModVersion for the specified mod
+	 * @param modId The ID of the mod.
+	 * @param versionID The ID of the version.
+	 * @return A ModVersion object containing the mod version info.
+	 * @throws KerbalStuffAPIException
+	 */
+	public ModVersion getModVersion(int modId, int versionID) throws KerbalStuffAPIException{
+		Response response = get(path:"/mod/${modId}/${versionID}");
+		return new ModVersion(response.json);
+	}
+	
+	/**
 	 * Gets the latest ModVersion for the specified mod
 	 * @param modId The ID of the mod.
 	 * @return A ModVersion object containing the mod version info.

@@ -4,7 +4,7 @@
 	<!--ANT 1.7 is required                                        -->
 
 	<property name="groovy.lib" value="${GROOVY_LIB}" />
-	<property name="project.version" value="0.1.0" />
+	<property name="project.version" value="0.2.0" />
 	<property name="project.name" value="KerbalStuffAPI" />
 
 	<target name="create_run_jar">
@@ -16,7 +16,7 @@
 			<fileset dir="bin" />
 
 			<zipfileset excludes="META-INF/*.SF" src="${groovy.lib}/groovy-all-current.jar" />
-			<zipfileset excludes="META-INF/*.SF" src="lib/groovy-wslite-1.1.0.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/groovy-wslite-2.0.0-SNAPSHOT.jar" />
 			
 			
 		</jar>
@@ -27,7 +27,7 @@
 			<fileset dir="bin" />
 
 			<zipfileset excludes="META-INF/*.SF" src="${groovy.lib}/groovy-all-current.jar" />
-			<zipfileset excludes="META-INF/*.SF" src="lib/groovy-wslite-1.1.0.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/groovy-wslite-2.0.0-SNAPSHOT.jar" />
 			
 			
 		</jar>
@@ -36,7 +36,7 @@
 	<target name="create_lib_jar">
 		<jar destfile="${project.name}-${project.version}-nogroovy.jar" filesetmanifest="mergewithoutmain">
 			<fileset dir="bin" />
-			<zipfileset excludes="META-INF/*.SF" src="lib/groovy-wslite-1.1.0.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/groovy-wslite-2.0.0-SNAPSHOT.jar" />
 		</jar>
 	</target>
 

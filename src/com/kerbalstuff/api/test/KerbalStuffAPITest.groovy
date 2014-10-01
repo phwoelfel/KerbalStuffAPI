@@ -13,6 +13,7 @@ class KerbalStuffAPITest {
 	String modSearch = "Resource Overview";
 	String userSearch = "sir";
 	int modID = 8;
+	int modVersionID = 611;
 	String userName = "SMILIE";
 	
 	public KerbalStuffAPITest(){
@@ -21,15 +22,14 @@ class KerbalStuffAPITest {
 	
 	static main(args) {
 		KerbalStuffAPITest test = new KerbalStuffAPITest();
-		test.testValid();
+		test.testValid(args);
 		
 		//KerbalStuffAPITestTableGui tableGui = new KerbalStuffAPITestTableGui();
 	}
 	
 	
-	public void testValid(){
+	public void testValid(def args){
 		try{
-			
 			// get new mod list
 			println(("#"*10)+" getting new mods");
 			List<Mod> newModList = api.getNewMods();
@@ -51,7 +51,7 @@ class KerbalStuffAPITest {
 				println(m.getInfo());
 			}
 			
-			/*
+			
 			// authentication via arguments
 			if(args.size()>1){
 				println(("#"*10)+" authenticating ${args[0]}")
@@ -89,10 +89,15 @@ class KerbalStuffAPITest {
 			Mod m = api.getMod(modID);
 			println(m.getInfo());
 			
+			// get mod version
+			println(("#"*10)+" getting mod version with id: ${modVersionID} for mod ${modID}");
+			ModVersion mv = api.getModVersion(modID, modVersionID);
+			println(mv.getInfo());
+			
 			// get latest version
 			println(("#"*10)+" getting latest version for mod ${modID}");
-			ModVersion mv = api.getLatestModVersion(modID);
-			println(mv.getInfo());
+			ModVersion lmv = api.getLatestModVersion(modID);
+			println(lmv.getInfo());
 			
 			
 			
@@ -104,7 +109,7 @@ class KerbalStuffAPITest {
 			println(("#"*10)+" trying to update mod: ${newModID}");
 			def updateResp = api.addModVersion(newModID, "Changing stuff!", "1.1", "0.24.2", false, new File("test_update.zip"))
 			println(("#"*10)+" update response: ${updateResp}")
-			*/
+			
 			
 		}
 		catch(KerbalStuffAPIException ex){
